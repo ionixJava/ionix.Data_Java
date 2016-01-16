@@ -1,12 +1,8 @@
 package ionix.Data;
 
-
-import java.sql.Connection;
-
-public interface DbTransaction {
+public interface DbTransaction extends AutoCloseable {
     java.sql.Connection getConnection();
-    //IsolationLevel IsolationLevel { get; }
-
+    IsolationLevel getIsolationLevel();
     void commit();
-    void rollback();
+    void rollBack();
 }

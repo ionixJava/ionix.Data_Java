@@ -1,8 +1,6 @@
 package ionix.Data;
 
-/**
- * Created by mehme on 31.12.2015.
- */
+
 public class PreExecuteSqlEventArgs {
     PreExecuteSqlEventArgs(DbAccess dataAccess, SqlQuery query)
     {

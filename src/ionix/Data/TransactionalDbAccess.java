@@ -23,6 +23,15 @@ public class TransactionalDbAccess extends DbAccess implements DbTransaction {
            throw new RuntimeException(e);
         }
     }
+    public void setsolationLevel(IsolationLevel level){
+        if (null == level)
+            throw new IllegalArgumentException("level");
+        try {
+            this.getConnection().setTransactionIsolation(level.getValue());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public void commit() {

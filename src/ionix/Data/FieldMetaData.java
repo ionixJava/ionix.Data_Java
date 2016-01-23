@@ -34,12 +34,12 @@ public class FieldMetaData {
         return this;
     }
 
-    private String parameterName;
-    public String getParameterName(){
-        return this.parameterName == null ? "" : this.parameterName;
+    private int parameterIndex;
+    public int getParameterIndex(){
+        return this.parameterIndex;
     }
-    public FieldMetaData setParameterName(String value){
-        this.parameterName = value;
+    public FieldMetaData setParameterIndex(int value){
+        this.parameterIndex = value;
         return this;
     }
 

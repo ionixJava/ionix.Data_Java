@@ -4,11 +4,11 @@ package ionix.Data;
 import ionix.Utils.CachedTypes;
 import ionix.Utils.Ext;
 import ionix.Utils.Ref;
-
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.HashSet;
 
+//Bu Kısım DbCommand larda mutlaka elden geçmneli. Aynı şekilde parametre tip belirleme de.
+//Ek olarak named parametreler kullanılmayacak.
 public abstract class DbValueSetter {
     private static final HashSet<Class> withQuotes;
 
@@ -41,11 +41,27 @@ public abstract class DbValueSetter {
             }
         }
 
-        switch (schema.getSqlValueType()){
+        switch (schema.getSqlValueType()){//Buralar DbCommand yazılarken test edilecek.
             case Parameterized:
-                text.append(this.getPrefix());
-                text.append(metaData.)
+                text.append('?');
+                SqlQueryParameter par = SqlQueryParameter.create(metaData, parValue);
+                query.getParameters().add(par);
                 break;
+            case Text:
+                String textValue = null;
+                if (null != parValue){
+                    Class dataType = metaData.getSchema().getDataClass();
+                    if (withQuotes.contains(dataType)){
+                        textValue = "'" + parValue + "'";
+                    }
+                    else{
+                        textValue = parValue.toString();
+                    }
+                }
+                text.append(textValue);
+                break;
+            default:
+                throw new UnsupportedOperationException(schema.getSqlValueType().toString());
         }
     }
 }

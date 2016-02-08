@@ -75,7 +75,6 @@ public class EntityMetaData {
     }
 
     private HashMap<String, FieldMetaData> dic;
-
     private HashMap<String, FieldMetaData> getDic() {
         if (null == this.dic) {
             this.dic = new HashMap<>(this.hash.size());
@@ -87,8 +86,6 @@ public class EntityMetaData {
     }
 
     public FieldMetaData get(String columnName) {
-        FieldMetaData p = null;
-        this.getDic().getOrDefault(columnName, p);
-        return p;
+        return this.getDic().get(columnName);
     }
 }

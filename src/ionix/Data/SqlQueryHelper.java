@@ -14,4 +14,15 @@ public final class SqlQueryHelper {
         if (Ext.isNullOrEmpty(metaData.getTableName()))
             throw new NullPointerException("IEntityMetaData.TableName");
     }
+
+    public static <TEntity> EntityMetaData ensureCreateEntityMetaData(Class<TEntity> cls, EntityMetaDataProvider provider)
+    {
+        if (null == provider)
+            throw new IllegalArgumentException("provider is null");
+
+        EntityMetaData ret = provider.createEntityMetaData(cls);
+        ensureEntityMetaData(ret);
+
+        return ret;
+    }
 }

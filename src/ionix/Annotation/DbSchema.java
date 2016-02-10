@@ -3,19 +3,26 @@ package ionix.Annotation;
 import ionix.Data.SqlValueType;
 import ionix.Data.StoreGeneratedPattern;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
 public @interface DbSchema {
-    String columnName();//Proprty ismi kolon ismiyle farklılık gösteriyor mu diye.
+    String columnName() default "";    //Proprty ismi kolon ismiyle farklılık gösteriyor mu diye.
 
-    boolean isKey();
-    StoreGeneratedPattern databaseGeneratedOption();
+    boolean isKey() default false;
+    StoreGeneratedPattern databaseGeneratedOption() default StoreGeneratedPattern.None;
 
-    boolean isNullable();
-    int maxLength();//UI Binding için.
-    String defaultValue();
+    boolean isNullable() default false;
+    int maxLength() default 0;//UI Binding için.
+    String defaultValue() default "";
 
-    boolean readOnly();
+    boolean readOnly() default false;
 
-    int order();
+    int order() default 0;
 
-    SqlValueType sqlValueType();
+    SqlValueType sqlValueType() default SqlValueType.Parameterized;
 }

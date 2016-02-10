@@ -6,7 +6,6 @@ import ionix.Utils.Ref;
 import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 
 public class EntityCommandSelect {
 
@@ -76,17 +75,45 @@ public class EntityCommandSelect {
         }
     }
 
-    private <TEntity> TEntity readEntity(EntityMetaData metaData, SqlQuery query, MapType mapType){
+    private <TEntity> TEntity readEntity(EntityMetaData metaData, SqlQuery query, MapType mapType) {
+        TEntity entity = null;
         QueryResult result = null;
-        try{
+        try {
             result = this.getDataAccess().executeQuery(query);
 
-            if (result.getResultSet().next()){
-
+            try {
+                if (result.getResultSet().next()) {
+                    entity = (TEntity) metaData.getEntityClass().newInstance();
+                    this.map(entity, metaData, result, mapType);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
+        } finally {
+            if (null != result)
+                result.close();
         }
-        finally{
+        return entity;
+    }
 
-        }
+    public <TEntity> TEntity querySingle(Class<TEntity> cls, EntityMetaDataProvider provider, SqlQuery query){
+        if (null == query)
+            throw new IllegalArgumentException ("query is null");
+
+        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(cls, provider);
+
+        return this.readEntity(metaData, query, MapType.Query);
+    }
+
+    public <TEntity> TEntity selectSingle(Class<TEntity> cls, EntityMetaDataProvider provider, SqlQuery extendedQuery)
+    {
+        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(cls, provider);
+
+        SqlQueryProviderSelect builder = new SqlQueryProviderSelect(metaData);
+        SqlQuery query = builder.toQuery();
+        if (null != extendedQuery)
+            query.combine(extendedQuery);
+
+        return this.readEntity(metaData, query, MapType.Select);
     }
 }

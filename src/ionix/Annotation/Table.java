@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Table {
     String name();
-    String schema();
+    String schema() default "";
 }

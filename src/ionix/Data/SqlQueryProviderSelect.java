@@ -1,8 +1,8 @@
 package ionix.Data;
 
-public class SqlQueryBuilderSelect implements SqlQueryProvider {
+public class SqlQueryProviderSelect implements SqlQueryProvider {
 
-    public SqlQueryBuilderSelect(EntityMetaData metaData) {
+    public SqlQueryProviderSelect(EntityMetaData metaData) {
         SqlQueryHelper.ensureEntityMetaData(metaData);
 
         this.metaData = metaData;
@@ -27,9 +27,9 @@ public class SqlQueryBuilderSelect implements SqlQueryProvider {
             text.append(columnName);
             text.append(", ");
         }
-        text.delete(text.length() - 2, 1);
+        text.delete(text.length() - 2, text.length());
 
-        text.append("FROM ");
+        text.append(" FROM ");
         text.append(tableName);
 
         return query;
@@ -53,9 +53,9 @@ public class SqlQueryBuilderSelect implements SqlQueryProvider {
             text.append(columnName);
             text.append(", ");
         }
-        text.delete(text.length() - 2, 1);
+        text.delete(text.length() - 2, text.length());
 
-        text.append("FROM ");
+        text.append(" FROM ");
         text.append(tableName);
         text.append(' ');
         text.append(tableAlias);

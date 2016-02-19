@@ -14,10 +14,18 @@ public class SqlQueryProviderSelect implements SqlQueryProvider {
         return this.metaData;
     }
 
+    private SqlQuery seed;
+    @Override
+    public void setRoot(SqlQuery seed){
+        this.seed = seed;
+    }
+    private SqlQuery createQuery(){
+        return this.seed == null ? new SqlQuery() : seed;
+    }
     public SqlQuery toQuery() {
         String tableName = this.metaData.getTableName();
 
-        SqlQuery query = new SqlQuery();
+        SqlQuery query = this.createQuery();
         StringBuilder text = query.getText();
         text.append("SELECT ");
 
@@ -38,7 +46,7 @@ public class SqlQueryProviderSelect implements SqlQueryProvider {
     public SqlQuery toQuery(String tableAlias) {
         String tableName = this.metaData.getTableName();
 
-        SqlQuery query = new SqlQuery();
+        SqlQuery query = this.createQuery();
         StringBuilder text = query.getText();
         text.append("SELECT ");
 

@@ -168,5 +168,9 @@ public class EntityCommandSelect {
         return this.readEntityList(metaData, query, MapType.Query);
     }
 
-    selectById de kaldık. Bunun İçin filtercriteria ve sql helper metodları gerekli
+   // selectById de kaldık. Bunun İçin filtercriteria ve sql helper metodları gerekli
+
+//    public <TEntity> TEntity selectById(EntityMetaDataProvider provider, Object... keys){
+//
+//    }
 }

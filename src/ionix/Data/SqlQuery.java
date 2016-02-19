@@ -25,33 +25,17 @@ public final class SqlQuery  {
         this("");
     }
 
-    public StringBuilder getText(){
-        return this.text;
+    public SqlQuery(SqlQuery query){
+        this();
+        if (null != query){
+            this.combine(query);
+        }
     }
-
-    public SqlQueryParameterList getParameters(){
-        return this.parameters;
-    }
-
-    public boolean isEmpty(){
-        return this.text.length() == 0;
-    }
-
-    @Override
-    public String toString(){
-        return this.text.toString();
-    }
-
     public SqlQuery combine(SqlQuery query){
         if (null != query){
             this.text.append(query.text);
-            this.parameters.addRange(query.parameters);
+            query.parameters.forEach((par)-> this.parameter(par.getValue()));
         }
-        return this;
-    }
-    public SqlQuery clear(){
-        this.text.setLength(0);
-        this.parameters.clear();
         return this;
     }
 
@@ -60,7 +44,7 @@ public final class SqlQuery  {
             this.text.append(sql);
             if (null != parameters){
                 for(int j = 0; j < parameters.length; ++j){
-                    this.parameters.add(j + 1, parameters[j]);
+                    this.parameter(parameters[j]);
                 }
             }
         }
@@ -80,11 +64,33 @@ public final class SqlQuery  {
         return this;
     }
 
-    public SqlQuery paramater(int index, Object value) {
-        if (index > 0){
-            this.parameters.add(index, value);
-        }
+
+    public synchronized SqlQuery parameter(Object value){//combine için kullanılacak. Artan Index Veriyor
+        this.parameters.add(this.parameters.size() + 1, value);
         return this;
+    }
+
+    public SqlQuery clear(){
+        this.text.setLength(0);
+        this.parameters.clear();
+        return this;
+    }
+
+    public StringBuilder getText(){
+        return this.text;
+    }
+
+    public SqlQueryParameterList getParameters(){
+        return this.parameters;
+    }
+
+    public boolean isEmpty(){
+        return this.text.length() == 0;
+    }
+
+    @Override
+    public String toString(){
+        return this.text.toString();
     }
 }
 

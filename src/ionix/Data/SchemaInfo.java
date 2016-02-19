@@ -187,13 +187,18 @@ public class SchemaInfo implements Lockable, Cloneable {
         ret.setColumnName(this.getColumnName());
         ret.setDataClass(this.getDataClass());
         ret.setIsNullable(this.getIsNullable());
+
         ret.setIsKey(this.getIsKey());
         ret.setReadOnly(this.getReadOnly());
+
         ret.setDatabaseGeneratedOption(this.getDatabaseGeneratedOption());
         ret.setDefaultValue(this.getDefaultValue());
+
         ret.setMaxLength(this.getMaxLength());
         ret.setOrder(this.getOrder());
+
         ret.setSqlValueType(this.getSqlValueType());
+
         return ret;
     }
 }

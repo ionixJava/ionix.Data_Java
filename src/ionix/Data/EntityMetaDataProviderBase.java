@@ -63,11 +63,14 @@ public abstract class EntityMetaDataProviderBase implements EntityMetaDataProvid
 
         EntityMetaData metaData = tempCache.get(entityClass);
         if (null == metaData) {
+            int order = 0;
             EntityMetaData temp = new EntityMetaData(entityClass);
             for (Field field : entityClass.getDeclaredFields()) {
                 SchemaInfo schema = this.fromField(field);
                 if (null == schema) //NotMapped.
                     continue;
+                if (schema.getOrder() == 0)
+                    schema.setOrder(++order);
                 schema.lock();
                 temp.add(schema, field);
                 field.setAccessible(true);//ki verilere metadata üzerinden erişilsin.

@@ -50,19 +50,13 @@ public final class SqlQueryParameterList implements Iterable<SqlQueryParameter> 
         return this;
     }
 
-    public SqlQueryParameterList addRange(Iterable<SqlQueryParameter> list)
-    {
-        if (null != list){
-            for(SqlQueryParameter item : list){
-                this.add(item);
-            }
-        }
-        return this;
-    }
-
     public SqlQueryParameterList clear(){
         this.list.clear();
         return this;
+    }
+
+    public int size(){
+        return this.list.size();
     }
 
     @Override

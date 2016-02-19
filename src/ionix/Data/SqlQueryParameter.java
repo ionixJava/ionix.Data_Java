@@ -10,7 +10,7 @@ import java.util.HashMap;
 public final class SqlQueryParameter {
     static SqlQueryParameter create(FieldMetaData metaData, Object value)//DbCommand larda kullanılacağı için Sadece Index ler kullanıcak.
     {
-        SqlQueryParameter ret = new SqlQueryParameter(metaData.getParameterIndex(), value);
+        SqlQueryParameter ret = new SqlQueryParameter(metaData.getSchema().getOrder(), value);
         if (null == value){
             SchemaInfo schema = metaData.getSchema();
             if (!schema.getIsNullable())

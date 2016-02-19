@@ -3,38 +3,41 @@ package ionix.Data;
 
 import ionix.Utils.Ext;
 import java.util.ArrayList;
+import java.util.Iterator;
 
-public class FilterCriteriaList extends ArrayList<FilterCriteria> implements SqlQueryProvider {
+public class FilterCriteriaList implements Iterable<FilterCriteria>, SqlQueryProvider {
 
-    public FilterCriteriaList add(String columnName, ConditionOperator op, Object... values)
-    {
+    private final ArrayList<FilterCriteria> list = new ArrayList<>();
+
+    public FilterCriteriaList add(String columnName, ConditionOperator op, Object... values) {
         FilterCriteria item = new FilterCriteria(columnName, op, values);
-        item.setRoot(this.createQuery());
-        super.add(item);
-        return  this;
+        this.list.add(item);
+        return this;
     }
 
-    public FilterCriteriaList add(FieldMetaData field, ConditionOperator op, Object... values)
-    {
-        if (null == field)
-            throw new IllegalArgumentException("field is null");
-
-        return this.add(field.getSchema().getColumnName(), op, values);
-    }
 
     private SqlQuery seed;
+
     @Override
-    public void setRoot(SqlQuery seed){
+    public void setRoot(SqlQuery seed) {
         this.seed = seed;
     }
-    private SqlQuery createQuery(){
+
+    private SqlQuery createQuery() {
         return this.seed == null ? new SqlQuery() : seed;
     }
 
-    public SqlQuery toQuery(String tableNameOp)
-    {
-        if (super.size() > 0)
-        {
+    public int size() {
+        return this.list.size();
+    }
+
+    @Override
+    public Iterator<FilterCriteria> iterator() {
+        return this.list.iterator();
+    }
+
+    public SqlQuery toQuery(String tableNameOp) {
+        if (this.size() > 0) {
             final boolean hasTableNameOp = !Ext.isNullOrEmpty(tableNameOp);
 
             SqlQuery query = this.createQuery();
@@ -42,9 +45,8 @@ public class FilterCriteriaList extends ArrayList<FilterCriteria> implements Sql
             text.append("\n");
             text.append("WHERE ");
 
-            this.forEach((filter)->{
-                if (null != filter)
-                {
+            this.forEach((filter) -> {
+                if (null != filter) {
                     if (hasTableNameOp)
                         text.append(tableNameOp);
 
@@ -62,8 +64,8 @@ public class FilterCriteriaList extends ArrayList<FilterCriteria> implements Sql
         return null;
     }
 
-    public SqlQuery toQuery()
-    {
+    @Override
+    public SqlQuery toQuery() {
         return this.toQuery(null);
     }
 }

@@ -168,9 +168,29 @@ public class EntityCommandSelect {
         return this.readEntityList(metaData, query, MapType.Query);
     }
 
-   // selectById de kaldık. Bunun İçin filtercriteria ve sql helper metodları gerekli
+    public <TEntity> TEntity selectById(Class<TEntity> cls, EntityMetaDataProvider provider, Object... keys){
+        if (null == keys || 0 == keys.length)
+            throw new IllegalArgumentException("keys is null or empty");
 
-//    public <TEntity> TEntity selectById(EntityMetaDataProvider provider, Object... keys){
-//
-//    }
+        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(cls, provider);
+
+        SqlQueryProviderSelect sp  = new SqlQueryProviderSelect(metaData);
+
+        FilterCriteriaList filters = new FilterCriteriaList();
+        filters.setRoot(sp.toQuery());
+
+        List<FieldMetaData> keySchemas = SqlQueryHelper.ofKeys(metaData, true);//Order a göre geldiği için böyle.
+        if (keySchemas.size() != keys.length)
+            throw new RuntimeException("Keys and Valus count does not match");
+
+        int index = -1;
+        for(FieldMetaData keyField : keySchemas)
+        {
+            filters.add(keyField.getSchema().getColumnName(), ConditionOperator.Equals, keys[++index]);
+        }
+
+        SqlQuery query = filters.toQuery();
+
+        return this.readEntity(metaData, query, MapType.Select);
+    }
 }

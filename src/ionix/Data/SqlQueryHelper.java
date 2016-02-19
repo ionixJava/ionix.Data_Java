@@ -3,6 +3,8 @@ package ionix.Data;
 
 import ionix.Utils.Ext;
 
+import java.util.*;
+
 public final class SqlQueryHelper {
 
     public static void ensureEntityMetaData(EntityMetaData metaData)
@@ -24,5 +26,32 @@ public final class SqlQueryHelper {
         ensureEntityMetaData(ret);
 
         return ret;
+    }
+
+
+    //SelectById ile Kullanılıyor.
+    public static List<FieldMetaData> ofKeys(EntityMetaData metaData, boolean throwExcIfNoKeys)
+    {
+        ArrayList<FieldMetaData> keys = new ArrayList<>();
+        metaData.getFields().forEach((field)-> {
+            if (field.getSchema().getIsKey())
+                keys.add(field);
+        });
+        if (keys.size() > 0)
+        {
+            Comparator<FieldMetaData> c = (f1, f2)-> {
+                Integer f1Order = f1.getSchema().getOrder();
+                return f1Order.compareTo(f2.getSchema().getOrder());
+            };
+            keys.sort(c);
+
+            return keys;
+        }
+        else
+        {
+            if (throwExcIfNoKeys)
+                throw new KeySchemaNotFoundException();
+            return null;
+        }
     }
 }

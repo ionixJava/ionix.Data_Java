@@ -22,6 +22,8 @@ public class SqlQueryProviderSelect implements SqlQueryProvider {
     private SqlQuery createQuery(){
         return this.seed == null ? new SqlQuery() : seed;
     }
+
+    @Override
     public SqlQuery toQuery() {
         String tableName = this.metaData.getTableName();
 

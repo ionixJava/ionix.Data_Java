@@ -54,4 +54,36 @@ public final class SqlQueryHelper {
             return null;
         }
     }
+
+    public static void setColumnValue(DbValueSetter setter, SqlQuery query, FieldMetaData metaData, Object entity)
+    {
+        setter.setColumnValue(query, metaData, entity);
+    }
+
+    public static SqlQuery createWhereSqlByKeys(EntityMetaData metaData, Object entity)
+    {
+        if (null == entity)
+            throw new IllegalArgumentException("entity is null");
+
+        List<FieldMetaData> keySchemas = ofKeys(metaData, true);
+
+        Object[] keyValues = new Object[keySchemas.size()];
+        for (int j = 0; j < keySchemas.size(); ++j)
+        {
+            try {
+                keyValues[j] = keySchemas.get(j).getField().get(entity);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        FilterCriteriaList list = new FilterCriteriaList();
+        for (int j = 0; j < keySchemas.size(); ++j)
+        {
+            FieldMetaData keySchema = keySchemas.get(j);
+
+            list.add(keySchema.getSchema().getColumnName(), ConditionOperator.Equals, keyValues[j]);
+        }
+        return list.toQuery();
+    }
 }

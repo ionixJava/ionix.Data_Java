@@ -9,7 +9,7 @@ import java.util.HashSet;
 
 //Bu Kısım DbCommand larda mutlaka elden geçmneli. Aynı şekilde parametre tip belirleme de.
 //Ek olarak named parametreler kullanılmayacak.
-public abstract class DbValueSetter {
+public class DbValueSetter {
     private static final HashSet<Class> withQuotes;
 
     static {
@@ -20,7 +20,9 @@ public abstract class DbValueSetter {
         withQuotes = temp;
     }
 
-    public abstract char getPrefix();
+    public static final DbValueSetter Instance = new DbValueSetter();
+    private DbValueSetter(){
+    }
 
     public void setColumnValue(SqlQuery query, FieldMetaData metaData, Object entity) {
         SchemaInfo schema = metaData.getSchema();

@@ -2,15 +2,14 @@ package ionix.Data;
 
 
 import ionix.Utils.Ext;
-import ionix.Utils.ThrowingHashSet;
 import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.*;
 
 public class EntityMetaData {
 
     private final Class entityClass;
-    private final ThrowingHashSet<FieldMetaData> hash;
-    private String tableName;
+    private List<FieldMetaData> list;//Set ve Map gibi listeler sıralı getirmiyor field leri o yüzden bu şekilde oldu
+    private final String tableName;
 
     public EntityMetaData(Class entityClass, String tableName) {
         if (null == entityClass)
@@ -19,7 +18,7 @@ public class EntityMetaData {
             throw new IllegalArgumentException("tableName is null or empty");
 
         this.entityClass = entityClass;
-        this.hash = new ThrowingHashSet<>();
+        this.list = new ArrayList<>();
         this.tableName = tableName;
     }
 
@@ -27,24 +26,13 @@ public class EntityMetaData {
         this(entityClass, ExtAnnotation.getTableName(entityClass));
     }
 
-    public void add(SchemaInfo schema, Field field) {
-        this.hash.add(new FieldMetaData(schema, field));
+    void add(SchemaInfo schema, Field field) {
+        this.list.add(new FieldMetaData(schema, field));
     }
 
-    public void add(FieldMetaData item) {
-        if (null == item)
-            throw new IllegalArgumentException("item is null");
-
-        this.hash.add(item);
-    }
 
     public String getTableName() {
         return this.tableName == null ? "" : this.tableName;
-    }
-
-    public EntityMetaData setTableName(String tableName) {
-        this.tableName = tableName;
-        return this;
     }
 
     public Class getEntityClass() {
@@ -52,18 +40,18 @@ public class EntityMetaData {
     }
 
     public Iterable<FieldMetaData> getFields() {
-        return this.hash;
+        return this.list;
     }
 
     public int size() {
-        return this.hash.size();
+        return this.list.size();
     }
 
     @Override
     public EntityMetaData clone() {
         EntityMetaData copy = new EntityMetaData(this.entityClass, this.tableName);//Type ReadOnly bir object dir. String de fixed char* kullanılmıyorsa immutable bir nesnedir.
-        for (FieldMetaData orginal : this.hash) {
-            copy.hash.add(orginal.clone());
+        for (FieldMetaData orginal : this.list) {
+            copy.list.add(orginal.clone());
         }
 
         return copy;
@@ -75,11 +63,12 @@ public class EntityMetaData {
     }
 
     private HashMap<String, FieldMetaData> dic;
-    private HashMap<String, FieldMetaData> getDic() {
+    private synchronized HashMap<String, FieldMetaData> getDic() {
         if (null == this.dic) {
-            this.dic = new HashMap<>(this.hash.size());
-            for (FieldMetaData item : this.hash)
+            this.dic = new HashMap<>(this.list.size());
+            for (FieldMetaData item : this.list)
                 this.dic.put(item.getSchema().getColumnName(), item);
+            this.list = Collections.unmodifiableList(this.list);
         }
 
         return this.dic;

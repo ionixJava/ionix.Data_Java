@@ -69,8 +69,8 @@ public abstract class EntityMetaDataProviderBase implements EntityMetaDataProvid
                 SchemaInfo schema = this.fromField(field);
                 if (null == schema) //NotMapped.
                     continue;
-                if (schema.getOrder() == 0)
-                    schema.setOrder(++order);
+
+                schema.setOrder(++order);
                 schema.lock();
                 temp.add(schema, field);
                 field.setAccessible(true);//ki verilere metadata üzerinden erişilsin.

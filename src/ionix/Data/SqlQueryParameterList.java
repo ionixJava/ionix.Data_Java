@@ -9,7 +9,6 @@ public final class SqlQueryParameterList implements Iterable<SqlQueryParameter> 
 
     private final ArrayList<SqlQueryParameter> list = new ArrayList<>();
 
-
     //Optimizasyon için eklendi
     private boolean hasNamed;
     final boolean getHasNamed(){
@@ -57,6 +56,10 @@ public final class SqlQueryParameterList implements Iterable<SqlQueryParameter> 
 
     public int size(){
         return this.list.size();
+    }
+
+    public SqlQueryParameter get(int index){
+        return this.list.get(index);
     }
 
     @Override

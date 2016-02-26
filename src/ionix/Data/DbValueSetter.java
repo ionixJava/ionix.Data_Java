@@ -5,7 +5,8 @@ import ionix.Utils.CachedTypes;
 import ionix.Utils.Ext;
 import ionix.Utils.Ref;
 import java.lang.reflect.Field;
-import java.util.HashSet;
+import java.sql.*;
+import java.util.*;
 
 //Bu Kısım DbCommand larda mutlaka elden geçmneli. Aynı şekilde parametre tip belirleme de.
 //Ek olarak named parametreler kullanılmayacak.
@@ -21,7 +22,7 @@ public class DbValueSetter {
     }
 
     public static final DbValueSetter Instance = new DbValueSetter();
-    private DbValueSetter(){
+    protected DbValueSetter(){
     }
 
     public void setColumnValue(SqlQuery query, FieldMetaData metaData, Object entity) {
@@ -46,8 +47,17 @@ public class DbValueSetter {
         switch (schema.getSqlValueType()){//Buralar DbCommand yazılarken test edilecek.
             case Parameterized:
                 text.append('?');
-                SqlQueryParameter par = SqlQueryParameter.create(metaData, parValue);
-                query.getParameters().add(par);
+
+                if (null == parValue && !schema.getIsNullable())
+                    throw new RuntimeException(new SQLDataException(schema.getColumnName() + " can not be null"));
+
+                SqlQueryParameterList pars = query.getParameters();
+                SqlQueryParameter par = new SqlQueryParameter()
+                        .setValue(parValue)
+                        .setDataType(getTypeMap().get(field.getDeclaringClass()))
+                        .setIndex(pars.size() + 1);
+
+                pars.add(par);
                 break;
             case Text:
                 String textValue = null;
@@ -65,5 +75,29 @@ public class DbValueSetter {
             default:
                 throw new UnsupportedOperationException(schema.getSqlValueType().toString());
         }
+    }
+
+    private static final HashMap<Class, JDBCType> typeMap = new HashMap<>();
+    private synchronized static HashMap<Class, JDBCType> getTypeMap(){
+        if (typeMap.isEmpty()){
+            typeMap.put(CachedTypes.String, JDBCType.VARCHAR);
+            typeMap.put(CachedTypes.Nullable_Boolean, JDBCType.BIT);
+            typeMap.put(CachedTypes.BigDecimal, JDBCType.NUMERIC);
+            typeMap.put(CachedTypes.Nullable_Byte, JDBCType.TINYINT);
+            typeMap.put(CachedTypes.Nullable_Short, JDBCType.SMALLINT);
+            typeMap.put(CachedTypes.Nullable_Int, JDBCType.INTEGER);
+            typeMap.put(CachedTypes.Nullable_Long, JDBCType.BIGINT);
+            typeMap.put(CachedTypes.Nullable_Float,JDBCType.FLOAT);
+            typeMap.put(CachedTypes.Nullable_Double, JDBCType.DOUBLE);
+            typeMap.put(CachedTypes.ByteArray, JDBCType.VARBINARY);
+            typeMap.put(CachedTypes.Date, JDBCType.DATE);
+            typeMap.put(CachedTypes.Timestamp, JDBCType.TIMESTAMP);
+            typeMap.put(CachedTypes.Clob, JDBCType.CLOB);
+            typeMap.put(CachedTypes.Blob, JDBCType.BLOB);
+            typeMap.put(CachedTypes.Array, JDBCType.ARRAY);
+            typeMap.put(CachedTypes.Ref, JDBCType.REF);
+            typeMap.put(CachedTypes.Struct, JDBCType.STRUCT);
+        }
+        return typeMap;
     }
 }

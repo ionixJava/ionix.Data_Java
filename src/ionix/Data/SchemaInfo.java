@@ -102,7 +102,7 @@ public class SchemaInfo implements Lockable, Cloneable {
     public int getOrder(){
         return this.order.getValue();
     }
-    public SchemaInfo setOrder(int value){
+    SchemaInfo setOrder(int value){
         this.order.setValue(value);
         return this;
     }

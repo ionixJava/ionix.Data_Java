@@ -1,9 +1,9 @@
 package ionix.Data;
 
 
-public abstract class EntityCommandExecute {
+public abstract class EntityCommandExecute<TEntity> {
 
-    protected EntityCommandExecute(DbAccess dataAccess, Class<?> entityClass){
+    protected EntityCommandExecute(DbAccess dataAccess, Class<TEntity> entityClass){
         if (null == dataAccess)
             throw new IllegalArgumentException("dataAccess is  null");
 
@@ -21,5 +21,5 @@ public abstract class EntityCommandExecute {
         return this.entityClass;
     }
 
-    public abstract <TEntity>  int execute(TEntity entity, EntityMetaDataProvider provider);
+    public abstract int execute(TEntity entity, EntityMetaDataProvider provider);
 }

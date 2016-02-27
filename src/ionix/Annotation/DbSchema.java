@@ -16,7 +16,7 @@ public @interface DbSchema {
     boolean isKey() default false;
     StoreGeneratedPattern databaseGeneratedOption() default StoreGeneratedPattern.None;
 
-    boolean isNullable() default false;
+    boolean isNullable() default true;
     int maxLength() default 0;//UI Binding için.
     String defaultValue() default "";
 

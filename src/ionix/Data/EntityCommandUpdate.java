@@ -3,10 +3,9 @@ package ionix.Data;
 
 import java.util.HashSet;
 
-public interface EntityCommandUpdate
+public interface EntityCommandUpdate<TEntity>
 {
-    HashSet<String> getUpdatedFields();
-    void setUpdatedFields(HashSet<String> field);
+    void setUpdatedFields(HashSet<String> fields);
 
-    <TEntity> int  update(TEntity entity, EntityMetaDataProvider provider);
+    int  update(TEntity entity, EntityMetaDataProvider provider);
 }

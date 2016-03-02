@@ -77,11 +77,14 @@ public class TransactionalDbAccess extends DbAccess implements DbTransaction {
         Date now = new Date();
         try {
             ps = this.prepareStatement(SqlQuery.toQuery(templateQuery.getText().toString()), null);
-            final int size = templateQuery.getParameters().size() / metaData.size();// Her zaman aklansız bölünüyor.
+
+            final int metaDataCount = metaData.size();
+            final int entityCount = templateQuery.getParameters().size() / metaDataCount;// Her zaman kalansız bölünüyor.
+
             SqlQueryParameterList parameters = templateQuery.getParameters();
-            for(int j = 0; j < size; ++j){
-                for(int k = 0; k < parameters.size(); ++k){
-                    ps.setObject(k + 1, parameters.get(j * size + k));
+            for(int j = 0; j < entityCount; ++j){
+                for(int k = 0; k < metaDataCount; ++k){
+                    ps.setObject(k + 1, parameters.get(j * metaDataCount + k).getValue());
                 }
                 ps.addBatch();
             }

@@ -9,16 +9,12 @@ import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityCommandSelect {
+public class EntityCommandSelect<TEntity> extends EntityCommandBase<TEntity> {
 
-    public EntityCommandSelect(DbAccess dataAccess){
-        this.dataAccess = dataAccess;
+    public EntityCommandSelect(Class<TEntity> cls, DbAccess dataAccess){
+        super(cls, dataAccess);
     }
 
-    private final DbAccess dataAccess;
-    public DbAccess getDataAccess(){
-        return this.dataAccess;
-    }
 
     private boolean convertType;
     public boolean getConvertType(){return this.convertType;}
@@ -32,7 +28,7 @@ public class EntityCommandSelect {
         Query
     }
 
-    private <TEntity> void map(TEntity entity, EntityMetaData metaData, QueryResult qr, MapType mapType){
+    private void map(TEntity entity, EntityMetaData metaData, QueryResult qr, MapType mapType){
         switch (mapType){
             case Select:
                 for(FieldMetaData fd : metaData.getFields()){
@@ -77,7 +73,7 @@ public class EntityCommandSelect {
         }
     }
 
-    private <TEntity> TEntity readEntity(EntityMetaData metaData, SqlQuery query, MapType mapType) {
+    private TEntity readEntity(EntityMetaData metaData, SqlQuery query, MapType mapType) {
         TEntity entity = null;
         QueryResult result = null;
         try {
@@ -85,7 +81,7 @@ public class EntityCommandSelect {
 
             try {
                 if (result.getResultSet().next()) {
-                    entity = (TEntity) metaData.getEntityClass().newInstance();
+                    entity = (TEntity)this.getEntityClass().newInstance();
                     this.map(entity, metaData, result, mapType);
                 }
             } catch (Exception e) {
@@ -99,7 +95,7 @@ public class EntityCommandSelect {
     }
 
 
-    private <TEntity> List<TEntity> readEntityList(EntityMetaData metaData, SqlQuery query, MapType mapType)
+    private List<TEntity> readEntityList(EntityMetaData metaData, SqlQuery query, MapType mapType)
     {
         ArrayList<TEntity> ret = new ArrayList<>();
 
@@ -111,7 +107,7 @@ public class EntityCommandSelect {
 
             try {
                 while (rs.next()){
-                    TEntity entity = (TEntity) metaData.getEntityClass().newInstance();
+                    TEntity entity = (TEntity)this.getEntityClass().newInstance();
                     this.map(entity, metaData, qr, mapType);
                     ret.add(entity);
                 }
@@ -127,9 +123,9 @@ public class EntityCommandSelect {
         return ret;
     }
 
-    public <TEntity> TEntity selectSingle(Class<TEntity> cls, EntityMetaDataProvider provider, SqlQuery extendedQuery)
+    public TEntity selectSingle(EntityMetaDataProvider provider, SqlQuery extendedQuery)
     {
-        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(cls, provider);
+        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(this.getEntityClass(), provider);
 
         SqlQueryProviderSelect builder = new SqlQueryProviderSelect(metaData);
         SqlQuery query = builder.toQuery();
@@ -139,8 +135,8 @@ public class EntityCommandSelect {
         return this.readEntity(metaData, query, MapType.Select);
     }
 
-    public <TEntity> List<TEntity> select(Class<TEntity> cls, EntityMetaDataProvider provider, SqlQuery extendedQuery){
-        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(cls, provider);
+    public List<TEntity> select(EntityMetaDataProvider provider, SqlQuery extendedQuery){
+        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(this.getEntityClass(), provider);
 
         SqlQueryProviderSelect builder = new SqlQueryProviderSelect(metaData);
         SqlQuery query = builder.toQuery();
@@ -150,29 +146,29 @@ public class EntityCommandSelect {
         return this.readEntityList(metaData, query, MapType.Select);
     }
 
-    public <TEntity> TEntity querySingle(Class<TEntity> cls, EntityMetaDataProvider provider, SqlQuery query){
+    public TEntity querySingle(EntityMetaDataProvider provider, SqlQuery query){
         if (null == query)
             throw new IllegalArgumentException ("query is null");
 
-        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(cls, provider);
+        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(this.getEntityClass(), provider);
 
         return this.readEntity(metaData, query, MapType.Query);
     }
 
-    public <TEntity> List<TEntity> query(Class<TEntity> cls, EntityMetaDataProvider provider, SqlQuery query){
+    public List<TEntity> query(EntityMetaDataProvider provider, SqlQuery query){
         if (null == query)
             throw new IllegalArgumentException ("query is null");
 
-        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(cls, provider);
+        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(this.getEntityClass(), provider);
 
         return this.readEntityList(metaData, query, MapType.Query);
     }
 
-    public <TEntity> TEntity selectById(Class<TEntity> cls, EntityMetaDataProvider provider, Object... keys){
+    public TEntity selectById(EntityMetaDataProvider provider, Object... keys){
         if (null == keys || 0 == keys.length)
             throw new IllegalArgumentException("keys is null or empty");
 
-        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(cls, provider);
+        EntityMetaData metaData = SqlQueryHelper.ensureCreateEntityMetaData(this.getEntityClass(), provider);
 
         SqlQueryProviderSelect sp  = new SqlQueryProviderSelect(metaData);
 

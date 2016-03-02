@@ -1,24 +1,10 @@
 package ionix.Data;
 
 
-public abstract class EntityCommandExecute<TEntity> {
+public abstract class EntityCommandExecute<TEntity> extends EntityCommandBase<TEntity> {
 
-    protected EntityCommandExecute(DbAccess dataAccess, Class<TEntity> entityClass){
-        if (null == dataAccess)
-            throw new IllegalArgumentException("dataAccess is  null");
-
-        this.dataAccess = dataAccess;
-        this.entityClass = entityClass;
-    }
-
-    private final DbAccess dataAccess;
-    public DbAccess getDataAccess(){
-        return this.dataAccess;
-    }
-
-    private final Class<?> entityClass;
-    public Class<?> getEntityClass(){
-        return this.entityClass;
+    protected EntityCommandExecute(Class<TEntity> entityClass, DbAccess dataAccess){
+        super(entityClass, dataAccess);
     }
 
     public abstract int execute(TEntity entity, EntityMetaDataProvider provider);

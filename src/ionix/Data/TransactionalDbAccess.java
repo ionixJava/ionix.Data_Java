@@ -76,7 +76,7 @@ public class TransactionalDbAccess extends DbAccess implements DbTransaction {
         Exception ex = null;
         Date now = new Date();
         try {
-            ps = this.prepareStatement(SqlQuery.toQuery(templateQuery.getText().toString()), null);
+            ps = this.prepareStatement(SqlQuery.toQuery(templateQuery.getText().toString()), null, null);
 
             final int entityCount = templateQuery.getParameters().size() / metaDataSize;// Her zaman kalansız bölünüyor.
 

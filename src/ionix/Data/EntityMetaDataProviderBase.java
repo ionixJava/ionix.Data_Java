@@ -21,6 +21,11 @@ public abstract class EntityMetaDataProviderBase implements EntityMetaDataProvid
 
     protected abstract void setExtendedSchema(SchemaInfo schema, Field field);
 
+    //TableName set etmek için eklendi çünkü EmtityMeataData readonly olmak zorunda
+    protected EntityMetaData generateEntityMetaData(Class entityClass){
+        return new EntityMetaData(entityClass);
+    }
+
     protected void setExtendedMetaData(EntityMetaData metaData) {
     }
 
@@ -64,7 +69,7 @@ public abstract class EntityMetaDataProviderBase implements EntityMetaDataProvid
         EntityMetaData metaData = tempCache.get(entityClass);
         if (null == metaData) {
             int order = 0;
-            EntityMetaData temp = new EntityMetaData(entityClass);
+            EntityMetaData temp = this.generateEntityMetaData(entityClass);
             for (Field field : entityClass.getDeclaredFields()) {
                 SchemaInfo schema = this.fromField(field);
                 if (null == schema) //NotMapped.

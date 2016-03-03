@@ -86,4 +86,27 @@ public final class SqlQueryHelper {
         }
         return list.toQuery();
     }
+
+    public static String toParameterlessQuery(SqlQuery query){
+        if (null != query){
+          Object[] arr = new Object[query.getParameters().size()];
+            for(int j  =0; j < arr.length;++ j){
+                Object parValue = query.getParameters().get(j).getValue();
+                if (null != parValue){
+                    if (DbValueSetter.withQuotes.contains(parValue.getClass()))
+                        parValue = "'" + parValue.toString() + "'";
+                    arr[j] = parValue;
+                }
+                else
+                    arr[j] = "NULL";
+            }
+
+            String sql = query.getText().toString();
+            sql = sql.replace("?", "%s");
+            sql = String.format(sql, arr);
+
+            return sql;
+        }
+        return "";
+    }
 }

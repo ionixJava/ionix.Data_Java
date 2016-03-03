@@ -11,7 +11,7 @@ import java.util.*;
 //Bu Kısım DbCommand larda mutlaka elden geçmneli. Aynı şekilde parametre tip belirleme de.
 //Ek olarak named parametreler kullanılmayacak.
 public class DbValueSetter {
-    private static final HashSet<Class> withQuotes;
+    static final HashSet<Class> withQuotes;
 
     static {
         HashSet<Class> temp = new HashSet<>();

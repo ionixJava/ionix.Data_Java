@@ -1,7 +1,7 @@
 package ionix.Data;
 
 
-public class EntityCommandDelete<TEntity> extends EntityCommandExecute<TEntity> {
+public class EntityCommandDelete<TEntity> extends EntityCommandExecuteBase<TEntity> {
 
     public EntityCommandDelete(Class<TEntity> entityClass, DbAccess dataAccess) {
         super(entityClass, dataAccess);

@@ -5,7 +5,7 @@ import ionix.Utils.Triplet;
 
 import java.util.HashSet;
 
-public class EntityCommandUpdate<TEntity> extends EntityCommandExecute<TEntity> {
+public class EntityCommandUpdate<TEntity> extends EntityCommandExecuteBase<TEntity> {
 
     public EntityCommandUpdate(Class<TEntity> entityClass, DbAccess dataAccess) {
         super(entityClass, dataAccess);

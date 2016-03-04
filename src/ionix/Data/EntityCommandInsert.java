@@ -5,7 +5,7 @@ import ionix.Utils.*;
 
 import java.util.HashSet;
 
-public abstract class EntityCommandInsert<TEntity> extends EntityCommandExecute<TEntity> {
+public abstract class EntityCommandInsert<TEntity> extends EntityCommandExecuteBase<TEntity> {
 
     protected EntityCommandInsert(Class<TEntity> entityClass, DbAccess dataAccess) {
         super(entityClass, dataAccess);

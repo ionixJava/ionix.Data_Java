@@ -5,7 +5,7 @@ import ionix.Utils.*;
 
 import java.util.*;
 
-public class BatchCommandUpdate<TEntity> extends BatchCommandExecute<TEntity> {
+public class BatchCommandUpdate<TEntity> extends BatchCommandExecuteBase<TEntity> {
 
     public BatchCommandUpdate(Class<TEntity> entityClass, TransactionalDbAccess dataAccess){
         super(entityClass, dataAccess);

@@ -7,7 +7,7 @@ import ionix.Utils.Triplet;
 import java.util.HashSet;
 import java.util.List;
 
-public class BatchCommandDelete<TEntity> extends BatchCommandExecute<TEntity> {
+public class BatchCommandDelete<TEntity> extends BatchCommandExecuteBase<TEntity> {
 
     public BatchCommandDelete(Class<TEntity> entityClass, TransactionalDbAccess dataAccess){
         super(entityClass, dataAccess);

@@ -7,7 +7,7 @@ import ionix.Utils.Triplet;
 import java.util.HashSet;
 import java.util.List;
 
-public abstract class BatchCommandInsert<TEntity> extends BatchCommandExecute<TEntity> {
+public abstract class BatchCommandInsert<TEntity> extends BatchCommandExecuteBase<TEntity> {
 
     protected BatchCommandInsert(Class<TEntity> entityClass, TransactionalDbAccess dataAccess){
         super(entityClass, dataAccess);

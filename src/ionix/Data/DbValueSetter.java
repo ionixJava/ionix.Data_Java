@@ -54,7 +54,7 @@ public class DbValueSetter {
                 SqlQueryParameterList pars = query.getParameters();
                 SqlQueryParameter par = new SqlQueryParameter()
                         .setValue(parValue)
-                        .setDataType(getTypeMap().get(field.getDeclaringClass()))
+                       // .setDataType(getTypeMap().get(field.getType()))  Belkide en iyisi provider lara bırakmak. Ama Problem çıkarsa yine de bu özelliği aktif hala getirebilirsin
                         .setIndex(pars.size() + 1);
 
                 pars.add(par);
@@ -82,13 +82,20 @@ public class DbValueSetter {
         if (typeMap.isEmpty()){
             typeMap.put(CachedTypes.String, JDBCType.VARCHAR);
             typeMap.put(CachedTypes.Nullable_Boolean, JDBCType.BIT);
+            typeMap.put(CachedTypes.Boolean, JDBCType.BIT);
             typeMap.put(CachedTypes.BigDecimal, JDBCType.NUMERIC);
             typeMap.put(CachedTypes.Nullable_Byte, JDBCType.TINYINT);
+            typeMap.put(CachedTypes.Byte, JDBCType.TINYINT);
             typeMap.put(CachedTypes.Nullable_Short, JDBCType.SMALLINT);
+            typeMap.put(CachedTypes.Short, JDBCType.SMALLINT);
             typeMap.put(CachedTypes.Nullable_Int, JDBCType.INTEGER);
+            typeMap.put(CachedTypes.Int, JDBCType.INTEGER);
             typeMap.put(CachedTypes.Nullable_Long, JDBCType.BIGINT);
+            typeMap.put(CachedTypes.Long, JDBCType.BIGINT);
             typeMap.put(CachedTypes.Nullable_Float,JDBCType.FLOAT);
+            typeMap.put(CachedTypes.Float,JDBCType.FLOAT);
             typeMap.put(CachedTypes.Nullable_Double, JDBCType.DOUBLE);
+            typeMap.put(CachedTypes.Double, JDBCType.DOUBLE);
             typeMap.put(CachedTypes.ByteArray, JDBCType.VARBINARY);
             typeMap.put(CachedTypes.Date, JDBCType.DATE);
             typeMap.put(CachedTypes.Timestamp, JDBCType.TIMESTAMP);

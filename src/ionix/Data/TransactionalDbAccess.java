@@ -55,6 +55,12 @@ public class TransactionalDbAccess extends DbAccess implements DbTransaction {
         }
     }
 
+    @Override
+    public void close(){
+        this.rollBack();//.net Gibi Davranıyor.
+        super.close();
+    }
+
     public void rollBack(Savepoint savepoint){
         try {
             this.getConnection().rollback(savepoint);

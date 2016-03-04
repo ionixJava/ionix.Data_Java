@@ -166,7 +166,7 @@ public class SchemaInfo implements Lockable, Cloneable {
     @Override
     public boolean equals(Object other){
         if (other instanceof SchemaInfo)
-            this.getColumnName().equals(((SchemaInfo)other).getColumnName());
+            return this.getColumnName().equals(((SchemaInfo)other).getColumnName());
         return false;
     }
 

@@ -244,7 +244,7 @@ public class DbAccess implements AutoCloseable {
         }
     }
 
-    private synchronized static final String parse(StringBuilder query, Map paramMap) {
+    private synchronized static String parse(StringBuilder query, Map paramMap) {
         int length=query.length();
         StringBuffer parsedQuery=new StringBuffer(length);
         boolean inSingleQuote=false;

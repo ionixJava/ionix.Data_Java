@@ -4,7 +4,9 @@ package ionix.Data;
 public interface CommandFactory {
     DbAccess getDataAccess();
 
-    EntityCommandSelect createSelectCommand();
+    <TEntity> EntityCommandSelect<TEntity> createSelectCommand(Class<TEntity> cls);
 
-    EntityCommandExecute createEntityCommand();
+    <TEntity> EntityCommandExecute<TEntity> createEntityCommand(Class<TEntity> cls, EntityCommandType cmdType);
+
+    <TEntity> BatchCommandExecute<TEntity> createBatchCommand(Class<TEntity> cls, EntityCommandType cmdType);
 }

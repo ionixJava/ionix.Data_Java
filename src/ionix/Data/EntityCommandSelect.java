@@ -18,7 +18,7 @@ public class EntityCommandSelect<TEntity> extends EntityCommandBase<TEntity> {
 
     private boolean convertType;
     public boolean getConvertType(){return this.convertType;}
-    public EntityCommandSelect setConvertType(boolean convertType){
+    public EntityCommandSelect<TEntity> setConvertType(boolean convertType){
         this.convertType = convertType;
         return this;
     }

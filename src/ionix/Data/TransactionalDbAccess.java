@@ -71,11 +71,11 @@ public class TransactionalDbAccess extends DbAccess implements DbTransaction {
 
 
     //Template Query de Bütün parametreler var. Yani barch ile eklenen tüm parametreler
-    public int[] executeBatch(SqlQuery templateQuery, int metaDataSize){//direk MetaDataOlmamasınız Sebibi update/InsertFields.
+    public int[] executeBatch(SqlQuery templateQuery, int divide){//direk MetaDataOlmamasınız Sebibi update/InsertFields.
         if (null == templateQuery || templateQuery.isEmpty())
             throw new IllegalArgumentException("templateQuery");
-        if (1 > metaDataSize)
-            throw new IllegalArgumentException("metaDataSize must be greater than zero");
+        if (1 > divide)
+            throw new IllegalArgumentException("divide Size must be greater than zero");
 
         int[] ret = null;
         PreparedStatement ps = null;
@@ -84,12 +84,12 @@ public class TransactionalDbAccess extends DbAccess implements DbTransaction {
         try {
             ps = this.prepareStatement(SqlQuery.toQuery(templateQuery.getText().toString()), null, null);
 
-            final int entityCount = templateQuery.getParameters().size() / metaDataSize;// Her zaman kalansız bölünüyor.
+            final int entityCount = templateQuery.getParameters().size() / divide;// Her zaman kalansız bölünüyor.
 
             SqlQueryParameterList parameters = templateQuery.getParameters();
             for(int j = 0; j < entityCount; ++j){
-                for(int k = 0; k < metaDataSize; ++k){
-                    ps.setObject(k + 1, parameters.get(j * metaDataSize + k).getValue());
+                for(int k = 0; k < divide; ++k){
+                    ps.setObject(k + 1, parameters.get(j * divide + k).getValue());
                 }
                 ps.addBatch();
             }

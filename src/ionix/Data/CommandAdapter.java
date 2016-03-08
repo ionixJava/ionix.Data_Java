@@ -127,4 +127,9 @@ public class CommandAdapter {
     public <TEntity> int[] batchInsert(Class<TEntity> cls, Iterable<TEntity> entityList){
         return this.batchInsert(cls, entityList, (String[])null);
     }
+
+    public <TEntity> int[] batchDelete(Class<TEntity> cls, Iterable<TEntity> entityList){
+        BatchCommandDelete<TEntity> cmd = (BatchCommandDelete<TEntity>)this.factory.createBatchCommand(cls, EntityCommandType.Delete);
+        return cmd.delete(entityList, this.provider);
+    }
 }

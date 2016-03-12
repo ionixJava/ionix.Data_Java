@@ -1,6 +1,7 @@
 package ionix.Data;
 
 
+import ionix.Conversion.Convert;
 import ionix.Utils.Ref;
 
 import java.lang.reflect.Field;
@@ -11,8 +12,15 @@ import java.util.List;
 
 public class EntityCommandSelect<TEntity> extends EntityCommandBase<TEntity> {
 
-    public EntityCommandSelect(Class<TEntity> cls, DbAccess dataAccess){
+    private final Convert convert;
+    public EntityCommandSelect(Class<TEntity> cls, DbAccess dataAccess, Convert convert){
         super(cls, dataAccess);
+        if (null == convert)
+            throw new IllegalArgumentException("convert is null");
+        this.convert = convert;
+    }
+    public EntityCommandSelect(Class<TEntity> cls, DbAccess dataAccess){
+        this(cls, dataAccess, Convert.Instance);
     }
 
 
@@ -37,7 +45,7 @@ public class EntityCommandSelect<TEntity> extends EntityCommandBase<TEntity> {
                     try {
                         Object dbValue = qr.getResultSet().getObject(columnName);
                         if (this.convertType)
-                            Ref.setValueSafely(field, entity, dbValue);
+                            Ref.setValueSafely(field, entity, dbValue, this.convert);
                         else
                             field.set(entity, dbValue);
 
@@ -58,7 +66,7 @@ public class EntityCommandSelect<TEntity> extends EntityCommandBase<TEntity> {
                             Field field = fd.getField();
                             Object dbValue = rs.getObject(j + 1);
                             if (this.convertType)
-                                Ref.setValueSafely(field, entity, dbValue);
+                                Ref.setValueSafely(field, entity, dbValue, this.convert);
                             else
                                 field.set(entity, dbValue);
                         }

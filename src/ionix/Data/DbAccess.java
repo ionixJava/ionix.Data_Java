@@ -138,7 +138,7 @@ public class DbAccess implements AutoCloseable {
 
 
     public <T> T executeScalar(Class<T> cls, SqlQuery query){
-        return (T)Convert.changeType(this.executeScalar(query), cls);
+        return (T)Convert.Instance.changeType(this.executeScalar(query), cls);
     }
 
 
@@ -161,7 +161,7 @@ public class DbAccess implements AutoCloseable {
         ArrayList<T> list = new ArrayList<>();
         Iterable it = this.executeScalarList(query);
         for(Object item : it){
-            list.add((T) Convert.changeType(item, cls));
+            list.add((T) Convert.Instance.changeType(item, cls));
         }
         return list;
     }
